@@ -27,13 +27,17 @@ public:
     }
 
     /**
-     * This quickly but haphazardly mixes additional entropy into
-     * the PRNG without fully re-seeding it.
+     * This quickly mixes additional entropy into  the PRNG with only
+     * partially re-seeding it. Don't use it for something very important.
      */
     void remix(uint32_t v)
     {
         rng3 ^= v;
-        rng0 ^= v;
+        rng2 <<= 25;
+        rng1 >>= 11;
+        rng0 |= v;
+        for (unsigned i = 0; i< 3; ++i)
+            uniform32();
     }
 
     uint32_t __attribute__((always_inline)) uniform32()
